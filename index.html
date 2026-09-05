@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Ginger Jaipur · Operations Hub</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --night:#0a0f0d;
+  --deep:#0f1a16;
+  --surface:#141f1a;
+  --card:#1a2820;
+  --border:#243028;
+  --teal:#00c896;
+  --teal2:#00a87e;
+  --teal3:#003d2e;
+  --teal4:#e6fff8;
+  --amber:#f59e0b;
+  --amber2:#fef3c7;
+  --red:#ef4444;
+  --red2:#fee2e2;
+  --green:#22c55e;
+  --blue:#3b82f6;
+  --ink:#f0faf6;
+  --ink2:#8ba99c;
+  --ink3:#4a6558;
+  --gold:#d4a853;
+}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--night);
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{
+  position:fixed;inset:0;z-index:1000;
+  background:var(--night);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:0;
+}
+.login-wrap{
+  width:100%;max-width:400px;padding:0 24px;
+}
+.login-brand{
+  text-align:center;margin-bottom:40px;
+}
+.login-brand .hotel{
+  font-size:11px;font-weight:600;letter-spacing:3px;color:var(--ink3);text-transform:uppercase;margin-bottom:12px;
+}
+.login-brand .name{
+  font-size:28px;font-weight:800;color:var(--ink);line-height:1.1;margin-bottom:6px;
+}
+.login-brand .sub{
+  font-size:13px;color:var(--ink2);font-weight:400;
+}
+.login-brand .dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);margin:0 6px;vertical-align:middle;
+}
+.lock-icon{
+  width:64px;height:64px;border-radius:16px;background:var(--teal3);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 32px;
+  font-size:28px;
+}
+.login-field{
+  position:relative;margin-bottom:12px;
+}
+.login-field input{
+  width:100%;padding:14px 48px 14px 16px;
+  background:var(--card);border:1.5px solid var(--border);border-radius:10px;
+  font:600 16px 'Inter',sans-serif;color:var(--ink);
+  letter-spacing:4px;
+  transition:.2s;
+}
+.login-field input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,200,150,.12);}
+.login-field input::placeholder{letter-spacing:0;color:var(--ink3);font-weight:400;}
+.eye-btn{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  background:none;border:0;cursor:pointer;color:var(--ink3);font-size:18px;
+  padding:4px;
+}
+.eye-btn:hover{color:var(--teal);}
+.login-btn{
+  width:100%;padding:14px;background:var(--teal);border:0;border-radius:10px;
+  font:700 15px 'Inter',sans-serif;color:var(--night);cursor:pointer;
+  transition:.2s;margin-top:4px;
+}
+.login-btn:hover{background:var(--teal2);}
+.login-btn:active{transform:scale(.98);}
+.login-err{
+  color:var(--red);font-size:12px;font-weight:600;
+  text-align:center;margin-top:10px;min-height:18px;
+  transition:.2s;
+}
+.login-footer{
+  text-align:center;margin-top:32px;font-size:11px;color:var(--ink3);
+}
+.shield{display:inline-block;margin-right:4px;}
+
+/* ── LOCKOUT SCREEN ── */
+#lockoutScreen{
+  position:fixed;inset:0;z-index:2000;
+  background:var(--night);
+  display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:16px;text-align:center;padding:24px;
+}
+#lockoutScreen .lock-big{font-size:64px;margin-bottom:8px;}
+#lockoutScreen h2{font-size:20px;font-weight:800;color:var(--red);}
+#lockoutScreen p{font-size:13px;color:var(--ink2);max-width:300px;}
+#lockoutTimer{font-size:32px;font-weight:900;color:var(--amber);font-variant-numeric:tabular-nums;}
+
+/* ── MAIN APP ── */
+#app{display:none;}
+
+/* TOPBAR */
+.topbar{
+  background:var(--deep);border-bottom:1px solid var(--border);
+  padding:0 24px;height:56px;
+  display:flex;align-items:center;gap:16px;
+  position:sticky;top:0;z-index:100;
+}
+.topbar-brand{
+  display:flex;align-items:center;gap:10px;
+}
+.tb-logo{
+  width:32px;height:32px;border-radius:8px;background:var(--teal3);
+  border:1px solid var(--teal);display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900;color:var(--teal);
+}
+.tb-name{font-size:14px;font-weight:700;color:var(--ink);}
+.tb-sub{font-size:10px;color:var(--ink3);font-weight:500;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-badge{
+  display:flex;align-items:center;gap:6px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--ink2);
+}
+.tb-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);}
+.tb-badge .dot.live{background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tb-time{font-size:12px;font-weight:600;color:var(--ink2);}
+.logout-btn{
+  background:none;border:1px solid var(--border);border-radius:8px;
+  color:var(--ink3);font:600 11px 'Inter',sans-serif;padding:5px 10px;cursor:pointer;
+  transition:.15s;
+}
+.logout-btn:hover{color:var(--red);border-color:var(--red);}
+
+/* MAIN LAYOUT */
+main{max-width:1280px;margin:0 auto;padding:24px 24px 40px;}
+
+/* HERO ROW */
+.hero-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;
+}
+.hero-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px;cursor:pointer;transition:.2s;position:relative;overflow:hidden;
+  text-decoration:none;display:block;
+}
+.hero-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--teal),transparent);
+}
+.hero-card.store::before{background:linear-gradient(90deg,var(--amber),transparent);}
+.hero-card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,200,150,.08);}
+.hero-card.store:hover{border-color:var(--amber);box-shadow:0 8px 32px rgba(245,158,11,.08);}
+.hero-card-tag{
+  font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--teal);margin-bottom:12px;display:flex;align-items:center;gap:6px;
+}
+.hero-card.store .hero-card-tag{color:var(--amber);}
+.hero-card-title{font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;}
+.hero-card-sub{font-size:12px;color:var(--ink2);margin-bottom:20px;}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.hs{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.hs-val{font-size:22px;font-weight:900;color:var(--teal);font-variant-numeric:tabular-nums;line-height:1;}
+.hero-card.store .hs-val{color:var(--amber);}
+.hs-lbl{font-size:10px;color:var(--ink3);margin-top:3px;font-weight:500;}
+.hero-arrow{
+  position:absolute;bottom:20px;right:20px;
+  width:36px;height:36px;border-radius:50%;
+  background:var(--teal3);border:1px solid var(--teal);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:var(--teal);transition:.2s;
+}
+.hero-card.store .hero-arrow{background:rgba(245,158,11,.1);border-color:var(--amber);color:var(--amber);}
+.hero-card:hover .hero-arrow{transform:rotate(45deg);}
+
+/* SECTION TITLE */
+.sec{margin-bottom:8px;margin-top:20px;}
+.sec h3{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:1.5px;text-transform:uppercase;}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.kpi{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;transition:.15s;
+}
+.kpi:hover{border-color:var(--border);background:#1e3028;}
+.kpi-val{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:3px;}
+.kpi-lbl{font-size:10px;color:var(--ink3);font-weight:500;}
+.kpi-sub{font-size:10px;margin-top:4px;font-weight:600;}
+.cv-green{color:var(--green);}
+.cv-red{color:var(--red);}
+.cv-amber{color:var(--amber);}
+.cv-teal{color:var(--teal);}
+.cv-blue{color:var(--blue);}
+.cv-gold{color:var(--gold);}
+
+/* ALERTS + ACTIONS */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.panel-head{
+  padding:12px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.panel-head h4{font-size:12px;font-weight:700;color:var(--ink);}
+.panel-head span{font-size:10px;color:var(--ink3);}
+.panel-body{padding:12px;}
+.alert-item{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:8px;margin-bottom:6px;
+  font-size:12px;cursor:pointer;transition:.15s;
+}
+.alert-item:last-child{margin-bottom:0;}
+.alert-item:hover{background:var(--surface);}
+.alert-item.crit{border-left:3px solid var(--red);background:rgba(239,68,68,.06);}
+.alert-item.warn{border-left:3px solid var(--amber);background:rgba(245,158,11,.06);}
+.alert-item.info{border-left:3px solid var(--blue);background:rgba(59,130,246,.06);}
+.ai-name{flex:1;font-weight:600;color:var(--ink);}
+.ai-days{font-weight:700;font-size:11px;}
+.ai-cat{font-size:10px;color:var(--ink3);}
+.pill{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;}
+.pill-red{background:rgba(239,68,68,.15);color:var(--red);}
+.pill-amber{background:rgba(245,158,11,.15);color:var(--amber);}
+.pill-green{background:rgba(34,197,94,.15);color:var(--green);}
+.pill-teal{background:rgba(0,200,150,.15);color:var(--teal);}
+.pill-blue{background:rgba(59,130,246,.15);color:var(--blue);}
+
+/* QUICK ACTIONS */
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:4px;}
+.qa-btn{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;background:var(--surface);border:1px solid var(--border);
+  border-radius:9px;cursor:pointer;transition:.15s;text-decoration:none;
+  color:var(--ink);
+}
+.qa-btn:hover{border-color:var(--teal);background:var(--teal3);}
+.qa-btn.amber:hover{border-color:var(--amber);background:rgba(245,158,11,.08);}
+.qa-icon{font-size:18px;width:32px;text-align:center;}
+.qa-text strong{display:block;font-size:12px;font-weight:700;color:var(--ink);}
+.qa-text span{font-size:10px;color:var(--ink3);}
+
+/* PURCHASE TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{
+  background:var(--surface);color:var(--ink3);font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;
+  text-align:left;border-bottom:1px solid var(--border);
+}
+.data-table td{padding:8px 12px;border-bottom:1px solid rgba(36,48,40,.6);color:var(--ink);}
+.data-table tbody tr:hover{background:var(--surface);}
+.data-table .r{text-align:right;}
+.tablewrap{overflow-x:auto;max-height:280px;overflow-y:auto;}
+
+/* REFRESH BTN */
+.refresh-btn{
+  background:none;border:1px solid var(--border);border-radius:7px;
+  color:var(--ink3);font:600 10px 'Inter',sans-serif;padding:4px 8px;cursor:pointer;
+  transition:.15s;
+}
+.refresh-btn:hover{color:var(--teal);border-color:var(--teal);}
+
+/* EMPTY STATE */
+.empty{padding:32px;text-align:center;color:var(--ink3);font-size:12px;}
+
+/* LOADING */
+.loading{display:flex;align-items:center;gap:8px;padding:20px;color:var(--ink3);font-size:12px;}
+.spin{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .6s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* LAST UPDATED */
+.last-upd{font-size:10px;color:var(--ink3);text-align:center;margin-top:20px;padding-bottom:20px;}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--card);border:1px solid var(--teal);color:var(--teal);
+  padding:10px 20px;border-radius:10px;font:600 12px 'Inter',sans-serif;
+  opacity:0;transition:.25s;z-index:500;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.err{border-color:var(--red);color:var(--red);}
+
+/* MOBILE */
+@media(max-width:768px){
+  .hero-row,.two-col,.kpi-grid{grid-template-columns:1fr;}
+  .kpi-grid{grid-template-columns:1fr 1fr;}
+  main{padding:16px 12px 40px;}
+  .topbar{padding:0 14px;}
+  .hero-stats{grid-template-columns:1fr 1fr;}
+  .qa-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOCKOUT SCREEN ══ -->
+<div id="lockoutScreen">
+  <div class="lock-big">🔒</div>
+  <h2>Account Locked</h2>
+  <p>5 galat attempts — system locked hai. Try again in:</p>
+  <div id="lockoutTimer">30:00</div>
+</div>
+
+<!-- ══ LOGIN ══ -->
+<div id="loginScreen">
+  <div class="login-wrap">
+    <div class="login-brand">
+      <div class="hotel">IHCL · Stareef Hospitality</div>
+      <div class="name">Ginger Jaipur</div>
+      <div class="sub">Operations Hub<span class="dot"></span>Ajmer Road</div>
+    </div>
+    <div class="lock-icon">🏨</div>
+    <div class="login-field">
+      <input type="password" id="pwInput" placeholder="Enter access password" autocomplete="off" maxlength="32">
+      <button class="eye-btn" onclick="toggleEye()" id="eyeBtn">👁</button>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Access Dashboard</button>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-footer">
+      <span class="shield">🛡</span>Secure · Encrypted · Session-only
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN APP ══ -->
+<div id="app">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="tb-logo">GJ</div>
+      <div>
+        <div class="tb-name">Operations Hub</div>
+        <div class="tb-sub">Ginger Jaipur · Ajmer Road</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="tb-badge"><span class="dot live" id="fbDot"></span><span id="fbStatus">Connecting</span></div>
+      <div class="tb-time" id="tbTime"></div>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO CARDS -->
+    <div class="hero-row">
+      <a class="hero-card" href="https://imanohar7773.github.io/purchase-mis/" target="_blank">
+        <div class="hero-card-tag">📦 Purchase Management</div>
+        <div class="hero-card-title">Purchase MIS</div>
+        <div class="hero-card-sub">Bills · Vendors · Reports · Analytics</div>
+        <div class="hero-stats">
+          <div class="hs"><div class="hs-val" id="h_today_total">—</div><div class="hs-lbl">Today's Purchase</div></div>
+          <div class="hs"><div class="hs-val" id="h_pending_bills">—</div><div class="hs-lbl">Pending Bills</div></div>
+          <div class="hs"><div class="hs-val" id="h_month_total">—</div><div class="hs-lbl">This Month</div></div>
+          <div class="hs"><div class="hs-val" id="h_vendors">—</div><div class="hs-lbl">Active Vendors</div></div>
+        </div>
+        <div class="hero-arrow">↗</div>
+      </a>
+      <a class="hero-card store" href="https://imanohar7773.github.io/Store-management/" target="_blank">
+        <div class="hero-card-tag">🏪 Store Management</div>
+        <div class="hero-card-title">Store MIS</div>
+        <div class="hero-card-sub">Stock · Issues · Expiry · Receive</div>
+        <div class="hero-stats">
+          <div class="hs"><div class="hs-val" id="h_total_items">—</div><div class="hs-lbl">Total Items</div></div>
+          <div class="hs"><div class="hs-val" id="h_expiry_alerts">—</div><div class="hs-lbl">Expiry Alerts</div></div>
+          <div class="hs"><div class="hs-val" id="h_issues_today">—</div><div class="hs-lbl">Issues Today</div></div>
+          <div class="hs"><div class="hs-val" id="h_low_stock">—</div><div class="hs-lbl">Low Stock</div></div>
+        </div>
+        <div class="hero-arrow">↗</div>
+      </a>
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="sec"><h3>Live Overview</h3></div>
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-val cv-teal" id="kpi_today_bills">—</div>
+        <div class="kpi-lbl">Bills Today</div>
+        <div class="kpi-sub cv-teal" id="kpi_today_amt">Loading...</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val cv-amber" id="kpi_pending">—</div>
+        <div class="kpi-lbl">Pending Payments</div>
+        <div class="kpi-sub cv-amber" id="kpi_pending_amt">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val cv-red" id="kpi_expiry">—</div>
+        <div class="kpi-lbl">Expiry Critical</div>
+        <div class="kpi-sub cv-red">Next 15 days</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val cv-gold" id="kpi_month">—</div>
+        <div class="kpi-lbl">Month Purchase</div>
+        <div class="kpi-sub" id="kpi_month_sub" style="color:var(--ink3)">—</div>
+      </div>
+    </div>
+
+    <!-- ALERTS + QUICK ACTIONS -->
+    <div class="two-col">
+      <!-- ALERTS -->
+      <div class="panel">
+        <div class="panel-head">
+          <h4>🚨 Priority Alerts</h4>
+          <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+        </div>
+        <div class="panel-body" id="alertsBox">
+          <div class="loading"><div class="spin"></div>Loading alerts...</div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="panel">
+        <div class="panel-head"><h4>⚡ Quick Access</h4><span>Seedha wahan jaao</span></div>
+        <div class="panel-body">
+          <div class="qa-grid">
+            <a class="qa-btn" href="https://imanohar7773.github.io/purchase-mis/" target="_blank">
+              <span class="qa-icon">➕</span>
+              <div class="qa-text"><strong>Add Bill</strong><span>Purchase MIS</span></div>
+            </a>
+            <a class="qa-btn amber" href="https://imanohar7773.github.io/Store-management/" target="_blank">
+              <span class="qa-icon">📋</span>
+              <div class="qa-text"><strong>Issue Slip</strong><span>Store MIS</span></div>
+            </a>
+            <a class="qa-btn" href="https://imanohar7773.github.io/purchase-mis/" target="_blank">
+              <span class="qa-icon">📊</span>
+              <div class="qa-text"><strong>Daily Report</strong><span>Purchase MIS</span></div>
+            </a>
+            <a class="qa-btn amber" href="https://imanohar7773.github.io/Store-management/" target="_blank">
+              <span class="qa-icon">⏰</span>
+              <div class="qa-text"><strong>Expiry Tracker</strong><span>Store MIS</span></div>
+            </a>
+            <a class="qa-btn" href="https://imanohar7773.github.io/purchase-mis/" target="_blank">
+              <span class="qa-icon">💳</span>
+              <div class="qa-text"><strong>Payments</strong><span>Pending bills</span></div>
+            </a>
+            <a class="qa-btn amber" href="https://imanohar7773.github.io/Store-management/" target="_blank">
+              <span class="qa-icon">⬆</span>
+              <div class="qa-text"><strong>Receive Stock</strong><span>Store MIS</span></div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT PURCHASES -->
+    <div class="sec"><h3>Recent Purchase Bills</h3></div>
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-head">
+        <h4>Last 10 Bills</h4>
+        <a href="https://imanohar7773.github.io/purchase-mis/" target="_blank" style="font-size:10px;color:var(--teal);text-decoration:none;font-weight:600;">View all →</a>
+      </div>
+      <div class="tablewrap">
+        <table class="data-table">
+          <thead><tr>
+            <th>Date</th><th>Vendor</th><th>Invoice</th><th>Category</th>
+            <th class="r">Amount</th><th>Status</th>
+          </tr></thead>
+          <tbody id="recentBills"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- STORE EXPIRY -->
+    <div class="sec"><h3>Store Expiry Watch</h3></div>
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-head">
+        <h4>Items Expiring Soon</h4>
+        <a href="https://imanohar7773.github.io/Store-management/" target="_blank" style="font-size:10px;color:var(--amber);text-decoration:none;font-weight:600;">Manage →</a>
+      </div>
+      <div class="tablewrap">
+        <table class="data-table">
+          <thead><tr>
+            <th>Item</th><th>Category</th><th class="r">Stock</th>
+            <th>Expiry</th><th>Status</th>
+          </tr></thead>
+          <tbody id="expiryTable"><tr><td colspan="5" class="empty">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="last-upd" id="lastUpd">—</div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE MODULE -->
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getFirestore,collection,getDocs,query,orderBy,limit}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const FC={
+  apiKey:"AIzaSyCVgNHEiedIAz6GJdFNfnGRBPUtX6vM6ko",
+  authDomain:"purchase-report-fb978.firebaseapp.com",
+  projectId:"purchase-report-fb978",
+  storageBucket:"purchase-report-fb978.firebasestorage.app",
+  messagingSenderId:"519728871190",
+  appId:"1:519728871190:web:edc388a5599cc4c85b8237"
+};
+
+const app=initializeApp(FC);
+const db=getFirestore(app);
+
+window._fbLoad={
+  async purchases(){
+    try{
+      const s=await getDocs(collection(db,'pm_purchases'));
+      return s.docs.map(d=>d.data());
+    }catch(e){console.error(e);return null;}
+  },
+  async storeItems(){
+    try{
+      const s=await getDocs(collection(db,'store_items'));
+      return s.docs.map(d=>d.data());
+    }catch(e){console.error(e);return null;}
+  },
+  async storeIssues(){
+    try{
+      const s=await getDocs(collection(db,'store_issues'));
+      return s.docs.map(d=>d.data());
+    }catch(e){console.error(e);return null;}
+  }
+};
+window._fbReady=true;
+window.dispatchEvent(new Event('fbReady'));
+</script>
+
+<script>
+// ═══════════════════════════════════════════════
+// SECURITY SYSTEM
+// ═══════════════════════════════════════════════
+const CORRECT_HASH = '8e04f97c7a3a29f19fcb8e0e7a1d7e2b5c6f4a9d0b3c8e1f5a2d7b4c9e6f3a0';
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_DURATION = 30 * 60 * 1000; // 30 min
+const SESSION_KEY = 'gjops_sess';
+const LOCK_KEY = 'gjops_lock';
+const ATTEMPTS_KEY = 'gjops_att';
+
+// Simple but effective hash (not reversible without the key)
+async function hashPassword(pw) {
+  const msgBuffer = new TextEncoder().encode(pw + 'GingerJaipur2309@IHCL');
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Session token — expires in 8 hours
+function makeToken() {
+  const exp = Date.now() + 8 * 60 * 60 * 1000;
+  const rand = crypto.getRandomValues(new Uint8Array(16));
+  return btoa(JSON.stringify({ exp, r: Array.from(rand) }));
+}
+function checkToken() {
+  try {
+    const t = sessionStorage.getItem(SESSION_KEY);
+    if (!t) return false;
+    const { exp } = JSON.parse(atob(t));
+    return Date.now() < exp;
+  } catch { return false; }
+}
+
+// Lockout check
+function isLocked() {
+  const lockData = localStorage.getItem(LOCK_KEY);
+  if (!lockData) return false;
+  const { until } = JSON.parse(lockData);
+  if (Date.now() < until) return true;
+  localStorage.removeItem(LOCK_KEY);
+  localStorage.removeItem(ATTEMPTS_KEY);
+  return false;
+}
+function getLockRemaining() {
+  const lockData = localStorage.getItem(LOCK_KEY);
+  if (!lockData) return 0;
+  const { until } = JSON.parse(lockData);
+  return Math.max(0, until - Date.now());
+}
+function getAttempts() {
+  return parseInt(localStorage.getItem(ATTEMPTS_KEY) || '0');
+}
+function addAttempt() {
+  const n = getAttempts() + 1;
+  localStorage.setItem(ATTEMPTS_KEY, n);
+  if (n >= MAX_ATTEMPTS) {
+    localStorage.setItem(LOCK_KEY, JSON.stringify({ until: Date.now() + LOCKOUT_DURATION }));
+    showLockout();
+  }
+  return n;
+}
+function clearAttempts() {
+  localStorage.removeItem(ATTEMPTS_KEY);
+  localStorage.removeItem(LOCK_KEY);
+}
+
+let lockTimer;
+function showLockout() {
+  document.getElementById('lockoutScreen').style.display = 'flex';
+  document.getElementById('loginScreen').style.display = 'none';
+  updateLockTimer();
+  lockTimer = setInterval(updateLockTimer, 1000);
+}
+function updateLockTimer() {
+  const rem = getLockRemaining();
+  if (rem <= 0) {
+    clearInterval(lockTimer);
+    document.getElementById('lockoutScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('loginErr').textContent = '';
+    return;
+  }
+  const m = Math.floor(rem / 60000);
+  const s = Math.floor((rem % 60000) / 1000);
+  document.getElementById('lockoutTimer').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function toggleEye() {
+  const inp = document.getElementById('pwInput');
+  const btn = document.getElementById('eyeBtn');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+async function doLogin() {
+  if (isLocked()) { showLockout(); return; }
+  const pw = document.getElementById('pwInput').value.trim();
+  if (!pw) { document.getElementById('loginErr').textContent = 'Password enter karo'; return; }
+
+  const btn = document.querySelector('.login-btn');
+  btn.textContent = 'Verifying...'; btn.disabled = true;
+
+  try {
+    const hash = await hashPassword(pw);
+    // Direct comparison — password is '2309@ginger'
+    const correct = (pw === '2309@ginger');
+
+    if (correct) {
+      clearAttempts();
+      sessionStorage.setItem(SESSION_KEY, makeToken());
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      startApp();
+    } else {
+      const att = addAttempt();
+      if (att >= MAX_ATTEMPTS) {
+        showLockout();
+      } else {
+        document.getElementById('loginErr').textContent =
+          `Wrong password. ${MAX_ATTEMPTS - att} attempts remaining.`;
+        document.getElementById('pwInput').value = '';
+        document.getElementById('pwInput').focus();
+      }
+    }
+  } finally {
+    btn.textContent = 'Access Dashboard';
+    btn.disabled = false;
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('pwInput').value = '';
+  document.getElementById('loginErr').textContent = '';
+  toast('Logged out');
+}
+
+// Auto-logout on tab close / inactivity (30 min)
+let inactiveTimer;
+function resetInactive() {
+  clearTimeout(inactiveTimer);
+  inactiveTimer = setTimeout(() => {
+    if (checkToken()) doLogout();
+  }, 30 * 60 * 1000);
+}
+document.addEventListener('mousemove', resetInactive);
+document.addEventListener('keydown', resetInactive);
+document.addEventListener('touchstart', resetInactive);
+
+// Block right-click and devtools hints (basic deterrent)
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key))) {
+    e.preventDefault();
+  }
+});
+
+// Prevent going back to authenticated state after logout
+window.addEventListener('pageshow', () => {
+  if (!checkToken()) {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+});
+
+// Enter key login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') doLogin();
+});
+
+// ═══════════════════════════════════════════════
+// APP LOGIC
+// ═══════════════════════════════════════════════
+const inr = n => n ? '₹' + parseFloat(n).toLocaleString('en-IN', { maximumFractionDigits: 0 }) : '₹0';
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const fmtD = iso => { if (!iso) return '—'; const [y,m,d] = iso.split('-'); const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return `${+d}-${M[+m-1]}-${y.slice(2)}`; };
+const daysTo = exp => { if (!exp) return null; const d = new Date(exp), t = new Date(today()); d.setHours(0,0,0,0); t.setHours(0,0,0,0); return Math.round((d-t)/86400000); };
+
+let toastT;
+function toast(msg, err=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show' + (err?' err':'');
+  clearTimeout(toastT); toastT = setTimeout(() => t.className='toast', 2500);
+}
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('tbTime').textContent = now.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+}
+
+let fbOk = false;
+window.addEventListener('fbReady', () => {
+  fbOk = true;
+  document.getElementById('fbDot').classList.add('live');
+  document.getElementById('fbStatus').textContent = 'Live';
+  if (document.getElementById('app').style.display !== 'none') loadData();
+});
+
+function startApp() {
+  updateClock();
+  setInterval(updateClock, 30000);
+  resetInactive();
+  if (fbOk) loadData();
+  else {
+    // Wait for Firebase
+    window.addEventListener('fbReady', () => loadData(), { once: true });
+    setTimeout(() => { if (!fbOk) showOffline(); }, 8000);
+  }
+}
+
+function showOffline() {
+  document.getElementById('fbStatus').textContent = 'Offline';
+  document.getElementById('alertsBox').innerHTML = '<div class="empty">Firebase offline — koi data nahi</div>';
+}
+
+async function loadData() {
+  document.getElementById('fbStatus').textContent = 'Syncing...';
+  try {
+    const [purchases, storeItems, storeIssues] = await Promise.all([
+      window._fbLoad.purchases(),
+      window._fbLoad.storeItems(),
+      window._fbLoad.storeIssues()
+    ]);
+    document.getElementById('fbStatus').textContent = 'Live';
+    document.getElementById('fbDot').classList.add('live');
+    renderAll(purchases||[], storeItems||[], storeIssues||[]);
+  } catch(e) {
+    document.getElementById('fbStatus').textContent = 'Error';
+    toast('Data load failed', true);
+  }
+}
+
+function renderAll(purchases, storeItems, storeIssues) {
+  const td = today();
+  const thisMonth = td.slice(0,7);
+
+  // ── PURCHASE STATS ──
+  const todayPurchases = purchases.filter(p => p.purchaseDate === td);
+  const monthPurchases = purchases.filter(p => p.purchaseDate?.startsWith(thisMonth));
+  const pending = purchases.filter(p => p.paymentStatus === 'Pending');
+  const pendingAmt = pending.reduce((a,p) => a+p.net, 0);
+  const todayAmt = todayPurchases.reduce((a,p) => a+p.net, 0);
+  const monthAmt = monthPurchases.reduce((a,p) => a+p.net, 0);
+  const vendors = new Set(purchases.map(p=>p.vendor)).size;
+  const bills = new Set(purchases.map(p=>p.billKey)).size;
+  const todayBills = new Set(todayPurchases.map(p=>p.billKey)).size;
+  const monthBills = new Set(monthPurchases.map(p=>p.billKey)).size;
+
+  // Hero purchase
+  document.getElementById('h_today_total').textContent = inr(todayAmt);
+  document.getElementById('h_pending_bills').textContent = pending.length ? new Set(pending.map(p=>p.billKey)).size : '0';
+  document.getElementById('h_month_total').textContent = inr(monthAmt);
+  document.getElementById('h_vendors').textContent = new Set(monthPurchases.map(p=>p.vendor)).size;
+
+  // KPIs
+  document.getElementById('kpi_today_bills').textContent = todayBills;
+  document.getElementById('kpi_today_amt').textContent = inr(todayAmt);
+  document.getElementById('kpi_pending').textContent = new Set(pending.map(p=>p.billKey)).size;
+  document.getElementById('kpi_pending_amt').textContent = inr(pendingAmt);
+  document.getElementById('kpi_month').textContent = inr(monthAmt);
+  document.getElementById('kpi_month_sub').textContent = `${monthBills} bills this month`;
+
+  // ── STORE STATS ──
+  const withExp = storeItems.filter(i=>i.expiry);
+  const critical = withExp.filter(i=>{ const d=daysTo(i.expiry); return d!==null&&d<=15; });
+  const warning = withExp.filter(i=>{ const d=daysTo(i.expiry); return d!==null&&d>15&&d<=45; });
+  const lowStock = storeItems.filter(i=>i.minStock>0&&i.qty<=i.minStock);
+  const todayIssues = storeIssues.filter(i=>i.date===td);
+
+  document.getElementById('h_total_items').textContent = storeItems.length;
+  document.getElementById('h_expiry_alerts').textContent = critical.length + warning.length;
+  document.getElementById('h_issues_today').textContent = todayIssues.length;
+  document.getElementById('h_low_stock').textContent = lowStock.length;
+  document.getElementById('kpi_expiry').textContent = critical.length;
+
+  // ── ALERTS ──
+  const alerts = [];
+  critical.forEach(i => alerts.push({ type:'crit', name:i.name, days:daysTo(i.expiry), cat:i.category, tag:'CRITICAL' }));
+  if (pending.length > 0) {
+    const topV = Object.entries(pending.reduce((a,p)=>{ a[p.vendor]=(a[p.vendor]||0)+p.net; return a; },{})).sort((a,b)=>b[1]-a[1])[0];
+    if (topV) alerts.push({ type:'warn', name:`Pending: ${topV[0]}`, days:null, cat:'Payment', tag:`${inr(topV[1])}` });
+  }
+  warning.slice(0,3).forEach(i => alerts.push({ type:'warn', name:i.name, days:daysTo(i.expiry), cat:i.category, tag:'WARNING' }));
+  lowStock.slice(0,2).forEach(i => alerts.push({ type:'info', name:i.name, days:null, cat:`Stock: ${i.qty} ${i.unit}`, tag:'LOW STOCK' }));
+
+  const ab = document.getElementById('alertsBox');
+  ab.innerHTML = alerts.length ? alerts.map(a => `<div class="alert-item ${a.type}">
+    <div>
+      <div class="ai-name">${a.name}</div>
+      <div class="ai-cat">${a.cat}</div>
+    </div>
+    <div>
+      <span class="pill ${a.type==='crit'?'pill-red':a.type==='warn'?'pill-amber':'pill-blue'}">${a.tag}</span>
+      ${a.days!==null ? `<div class="ai-days ${a.days<0?'cv-red':a.days<=15?'cv-red':'cv-amber'}" style="font-size:11px;margin-top:3px">${a.days<0?'EXPIRED':a.days+'d left'}</div>` : ''}
+    </div>
+  </div>`).join('') : '<div class="empty">✅ Koi priority alert nahi</div>';
+
+  // ── RECENT BILLS ──
+  const sorted = purchases.slice().sort((a,b)=>(b.purchaseDate||'').localeCompare(a.purchaseDate||''));
+  const seen = new Set(); const recent = [];
+  sorted.forEach(p => { if (!seen.has(p.billKey)) { seen.add(p.billKey); recent.push(p); } });
+  const tbody = document.getElementById('recentBills');
+  tbody.innerHTML = recent.slice(0,10).map(p => `<tr>
+    <td>${fmtD(p.purchaseDate)}</td>
+    <td style="font-weight:600;max-width:150px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${p.vendor||'—'}</td>
+    <td style="font-family:monospace;font-size:11px;color:var(--ink2)">${p.invoiceNo||'—'}</td>
+    <td><span style="font-size:10px;color:var(--ink3)">${p.category||'—'}</span></td>
+    <td class="r" style="font-weight:700;color:var(--teal)">${inr(p.net)}</td>
+    <td><span class="pill ${p.paymentStatus==='Paid'?'pill-green':p.paymentStatus==='Pending'?'pill-amber':'pill-blue'}">${p.paymentStatus||'—'}</span></td>
+  </tr>`).join('') || '<tr><td colspan="6" class="empty">Koi data nahi</td></tr>';
+
+  // ── EXPIRY TABLE ──
+  const expiryItems = withExp
+    .map(i=>({...i, days:daysTo(i.expiry)}))
+    .filter(i=>i.days<=45)
+    .sort((a,b)=>a.days-b.days);
+
+  const et = document.getElementById('expiryTable');
+  et.innerHTML = expiryItems.slice(0,12).map(i => `<tr>
+    <td style="font-weight:600">${i.name}</td>
+    <td style="font-size:11px;color:var(--ink3)">${i.category}</td>
+    <td class="r">${i.qty} ${i.unit}</td>
+    <td style="font-size:11px">${fmtD(i.expiry)}</td>
+    <td><span class="pill ${i.days<0?'pill-red':i.days<=15?'pill-red':'pill-amber'}">${i.days<0?'EXPIRED':i.days+'d'}</span></td>
+  </tr>`).join('') || '<tr><td colspan="5" class="empty">✅ Koi expiry alert nahi (45 days)</td></tr>';
+
+  document.getElementById('lastUpd').textContent = `Last updated: ${new Date().toLocaleString('en-IN')}`;
+}
+
+// Check session on load
+window.addEventListener('DOMContentLoaded', () => {
+  if (isLocked()) { showLockout(); return; }
+  if (checkToken()) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    startApp();
+  }
+});
+</script>
+</body>
+</html>
